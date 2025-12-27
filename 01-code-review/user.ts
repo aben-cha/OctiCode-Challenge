@@ -1,6 +1,7 @@
 // api/user.ts
 import express, { Request, Response, NextFunction } from 'express';
 import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 import { Pool } from 'pg';
 import { z } from 'zod';
 import rateLimit from 'express-rate-limit';
@@ -8,6 +9,19 @@ import crypto from 'crypto';
 
 const router = express.Router();
 const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+
+//  Extend Express Request type
+declare global {
+  namespace Express {
+    interface Request {
+      user?: {
+        userId: number;
+        email: string;
+        role: string;
+      };
+    }
+  }
+}
 
 // Types
 interface User {
@@ -62,14 +76,17 @@ const inviteLimiter = rateLimit({
 });
 
 // Authorization middleware
-export function requireAuth( req: Request, res: Response, next: NextFunction
+export function requireAuth(
+  req: Request,
+  res: Response,
+  next: NextFunction
 ) {
   const authHeader = req.headers.authorization;
-  if (!authHeader?.startsWith("Bearer ")) {
-    return res.status(401).json({ error: "Unauthorized" });
+  if (!authHeader?.startsWith('Bearer ')) {
+    return res.status(401).json({ error: 'Unauthorized' });
   }
 
-  const token = authHeader.split(" ")[1];
+  const token = authHeader.split(' ')[1];
 
   try {
     const payload = jwt.verify(token, process.env.JWT_SECRET!) as {
@@ -81,21 +98,24 @@ export function requireAuth( req: Request, res: Response, next: NextFunction
     req.user = payload;
     next();
   } catch {
-    res.status(401).json({ error: "Invalid token" });
+    return res.status(401).json({ error: 'Invalid token' });
   }
 }
 
-export function requireAdmin(req: Request, res: Response, next: NextFunction
+export function requireAdmin(
+  req: Request,
+  res: Response,
+  next: NextFunction
 ) {
-  if (req.user?.role !== "admin") {
-    return res.status(403).json({ error: "Forbidden" });
+  if (req.user?.role !== 'admin') {
+    return res.status(403).json({ error: 'Forbidden' });
   }
   next();
 }
 
 // Routes
 router.post(
-  "/login",
+  '/login',
   loginLimiter,
   validate(loginSchema),
   async (req: Request, res: Response, next: NextFunction) => {
@@ -104,12 +124,12 @@ router.post(
 
       // Query user by email (safe, parameterized)
       const result = await pool.query<User>(
-        "SELECT id, email, password, role FROM users WHERE email = $1",
+        'SELECT id, email, password, role FROM users WHERE email = $1',
         [email]
       );
 
       if (result.rows.length === 0) {
-        return res.status(401).json({ error: "Invalid credentials" });
+        return res.status(401).json({ error: 'Invalid credentials' });
       }
 
       const user = result.rows[0];
@@ -117,7 +137,7 @@ router.post(
       // Verify password
       const isValid = await bcrypt.compare(password, user.password);
       if (!isValid) {
-        return res.status(401).json({ error: "Invalid credentials" });
+        return res.status(401).json({ error: 'Invalid credentials' });
       }
 
       // Create JWT
@@ -128,7 +148,7 @@ router.post(
           role: user.role,
         },
         process.env.JWT_SECRET!,
-        { expiresIn: "1h" }
+        { expiresIn: '1h' }
       );
 
       res.json({
@@ -146,11 +166,10 @@ router.post(
   }
 );
 
-
 router.post(
-  "/invite",
-  requireAuth,      // JWT verification middleware
-  requireAdmin,    // role === "admin"
+  '/invite',
+  requireAuth,
+  requireAdmin,
   inviteLimiter,
   validate(inviteSchema),
   async (req: Request, res: Response, next: NextFunction) => {
@@ -159,23 +178,23 @@ router.post(
 
       // Check if user exists
       const existing = await pool.query(
-        "SELECT id FROM users WHERE email = $1",
+        'SELECT id FROM users WHERE email = $1',
         [email]
       );
 
       if (existing.rows.length > 0) {
-        return res.status(409).json({ error: "User already exists" });
+        return res.status(409).json({ error: 'User already exists' });
       }
 
       // Generate secure temporary password
-      const tempPassword = crypto.randomBytes(16).toString("hex");
+      const tempPassword = crypto.randomBytes(16).toString('hex');
 
       // Hash password
       const hash = await bcrypt.hash(tempPassword, 12);
 
       // Insert user safely
       await pool.query(
-        "INSERT INTO users(email, password, role) VALUES ($1, $2, $3)",
+        'INSERT INTO users(email, password, role) VALUES ($1, $2, $3)',
         [email, hash, role]
       );
 
@@ -184,7 +203,7 @@ router.post(
 
       res.json({
         ok: true,
-        message: "Invitation sent",
+        message: 'Invitation sent',
         tempPassword, // remove in production
       });
     } catch (error) {
@@ -192,3 +211,5 @@ router.post(
     }
   }
 );
+
+export default router;
