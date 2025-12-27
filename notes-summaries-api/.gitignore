@@ -1,0 +1,37 @@
+# Node modules
+node_modules/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment variables
+.env
+
+# TypeScript
+dist/
+build/
+*.tsbuildinfo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# SQLite database (if using file-based DB)
+data/database.sqlite
+
+# JSON DB (optional, if you want to ignore local data)
+# data/db.json
+
+# VSCode settings
+.vscode/
+
+# Jest / Vitest coverage
+coverage/
+
+# Optional: npm package lock files (if you want to regenerate)
+# package-lock.json
+# yarn.lock
