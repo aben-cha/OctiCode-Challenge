@@ -80,48 +80,49 @@
 
 ## Polling (Last-Write-Wins)
 
-No built-in conflict detection
-Must implement: compare timestamps, show warning if updatedAt > localEditedAt
-Higher risk of data loss
-
+    No built-in conflict detection
+    Must implement: compare timestamps, show warning if updatedAt > localEditedAt
+    Higher risk of data loss
 
 Recommended Hybrid Approach
-Tier 1: Real-Time (Critical Data)
 
-Entities: Recording (status changes), SummarizationOutput (AI completion), Recommendation
-Scope: Data modified in last 24 hours
-Firestore Query: where('updatedAt', '>', Date.now() - 86400000)
-Rationale: Active workflows need instant updates. Most doctor activity is on recent data.
+## Tier 1: Real-Time (Critical Data)
 
-Tier 2: Periodic Polling (Less Critical)
+    Entities: Recording (status changes), SummarizationOutput (AI completion), Recommendation
+    Scope: Data modified in last 24 hours
+    Firestore Query: where('updatedAt', '>', Date.now() - 86400000)
+    Rationale: Active workflows need instant updates. Most doctor activity is on recent data.
 
-Entities: Historical recordings (>24 hours old), PersonalNote, MedicalSource updates
-Frequency: Poll every 5 minutes when app is active, stop when backgrounded
-Rationale: Older data changes rarely. Polling sufficient for occasional updates.
+## Tier 2: Periodic Polling (Less Critical)
 
-Tier 3: On-Demand (Archive)
+    Entities: Historical recordings (>24 hours old), PersonalNote, MedicalSource updates
+    Frequency: Poll every 5 minutes when app is active, stop when backgrounded
+    Rationale: Older data changes rarely. Polling sufficient for occasional updates.
 
-Entities: Recordings older than 30 days, AuditTrail, detailed analytics
-Fetch: Only when explicitly accessed by doctor (e.g., taps "Load Older")
-Pagination: Load 20 items at a time, infinite scroll
-Rationale: Rarely accessed, no need to sync proactively.
+## Tier 3: On-Demand (Archive)
 
-Power Management
+    Entities: Recordings older than 30 days, AuditTrail, detailed analytics
+    Fetch: Only when explicitly accessed by doctor (e.g., taps "Load Older")
+    Pagination: Load 20 items at a time, infinite scroll
+    Rationale: Rarely accessed, no need to sync proactively.
 
-Automatically downgrade to Tier 2 (polling) when battery < 20%
-Provide user toggle in settings: "Low Power Mode" to disable real-time sync
-Desktop/web always uses full real-time (no battery concern)
+## Power Management
 
-Implementation
-typescript// Mobile SDK
-if (batteryLevel < 20 || userPreference === 'low-power') {
-  usePolling(intervalMs: 300000); // 5 min
-} else {
-  useRealtime(recentDataOnly: true); // Last 24h
-}
-Expected Outcomes
+    Automatically downgrade to Tier 2 (polling) when battery < 20%
+    Provide user toggle in settings: "Low Power Mode" to disable real-time sync
+    Desktop/web always uses full real-time (no battery concern)
 
-Latency: <1s for active data, <5min for historical data
-Battery: 3-5% additional drain (vs 5-10% for full real-time)
-Cost: $1.50/month per 100 doctors (vs $3 for naive real-time, $10 for polling)
-UX: Best of both worlds—instant updates for active work, acceptable delay for archives
+    Implementation
+    typescript// Mobile SDK
+    if (batteryLevel < 20 || userPreference === 'low-power') {
+    usePolling(intervalMs: 300000); // 5 min
+    } else {
+    useRealtime(recentDataOnly: true); // Last 24h
+    }
+
+# Expected Outcomes
+
+    Latency: <1s for active data, <5min for historical data
+    Battery: 3-5% additional drain (vs 5-10% for full real-time)
+    Cost: $1.50/month per 100 doctors (vs $3 for naive real-time, $10 for polling)
+    UX: Best of both worlds—instant updates for active work, acceptable delay for archives
