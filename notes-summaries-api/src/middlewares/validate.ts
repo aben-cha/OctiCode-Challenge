@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
-import { AnyZodObject, ZodError } from 'zod/v3';
+import { z, ZodError } from 'zod';
 
-export const validate = (schema: AnyZodObject) => {
+export const validate = (schema: z.ZodSchema) => {
   return async (req: Request, res: Response, next: NextFunction) => {
     try {
       await schema.parseAsync({
@@ -14,7 +14,7 @@ export const validate = (schema: AnyZodObject) => {
       if (error instanceof ZodError) {
         res.status(400).json({
           error: 'Validation failed',
-          details: error.errors.map((err) => ({ path: err.path.join('.'), message: err.message })),
+          details: error.issues.map((err) => ({ path: err.path.join('.'), message: err.message })),
         });
       } else {
         next(error);
@@ -24,7 +24,7 @@ export const validate = (schema: AnyZodObject) => {
 };
 
 // Validate specific parts of the request
-export const validateBody = (schema: AnyZodObject) => {
+export const validateBody = (schema: z.ZodSchema) => {
   return async (req: Request, res: Response, next: NextFunction) => {
     try {
       req.body = await schema.parseAsync(req.body);
@@ -33,7 +33,7 @@ export const validateBody = (schema: AnyZodObject) => {
       if (error instanceof ZodError) {
         res.status(400).json({
           error: 'Validation failed',
-          details: error.errors.map((err) => ({ path: err.path.join('.'), message: err.message })),
+          details: error.issues.map((err) => ({ path: err.path.join('.'), message: err.message })),
         });
       } else {
         next(error);
@@ -42,16 +42,20 @@ export const validateBody = (schema: AnyZodObject) => {
   };
 };
 
-export const validateParams = (schema: AnyZodObject) => {
+export const validateParams = (schema: z.ZodSchema) => {
   return async (req: Request, res: Response, next: NextFunction) => {
     try {
-      req.params = await schema.parseAsync(req.params);
+      const parsed = await schema.parseAsync(req.params);
+      req.params = parsed as any;
       next();
     } catch (error) {
       if (error instanceof ZodError) {
         res.status(400).json({
           error: 'Validation failed',
-          details: error.errors.map((err) => ({ path: err.path.join('.'), message: err.message })),
+          details: error.issues.map((err) => ({
+            path: err.path.join('.'),
+            message: err.message,
+          })),
         });
       } else {
         next(error);
@@ -60,16 +64,17 @@ export const validateParams = (schema: AnyZodObject) => {
   };
 };
 
-export const validateQuery = (schema: AnyZodObject) => {
+export const validateQuery = (schema: z.ZodSchema) => {
   return async (req: Request, res: Response, next: NextFunction) => {
     try {
-      req.query = await schema.parseAsync(req.query);
+      const parsed = await schema.parseAsync(req.query);
+      req.query = parsed as any;
       next();
     } catch (error) {
       if (error instanceof ZodError) {
         res.status(400).json({
           error: 'Validation failed',
-          details: error.errors.map((err) => ({
+          details: error.issues.map((err) => ({
             path: err.path.join('.'),
             message: err.message,
           })),
