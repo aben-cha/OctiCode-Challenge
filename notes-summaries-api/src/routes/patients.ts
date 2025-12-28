@@ -1,18 +1,20 @@
 import { Router } from 'express';
-import {
-  getPatients,
-  getPatientByID,
-  createPatient,
-  updatePatient,
-  deletePatient,
-} from '@/controllers/patients';
+import { validateParams, validateBody } from '@/middlewares/validate';
+import { createPatientSchema, updatePatientSchema, patientIdSchema } from '../schemas/validation';
+import * as patientController from '@/controllers/patients';
 
 const router = Router();
 
-router.get('/', getPatients);
-router.get('/:id', getPatientByID);
-router.post('/', createPatient);
-router.put('/:id', updatePatient);
-router.delete('/:id', deletePatient);
+router.get('/', patientController.getPatients);
+router.get('/:id', validateParams(patientIdSchema), patientController.getPatientByID);
+router.get('/:id', validateParams(patientIdSchema), patientController.getPatientByID);
+router.post('/', validateBody(createPatientSchema), patientController.createPatient);
+router.put(
+  '/:id',
+  validateParams(patientIdSchema),
+  validateBody(updatePatientSchema),
+  patientController.updatePatient
+);
+router.delete('/:id', validateParams(patientIdSchema), patientController.deletePatient);
 
 export default router;
