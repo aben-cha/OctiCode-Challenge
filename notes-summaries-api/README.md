@@ -51,7 +51,13 @@
     ├── .prettierrc                    # Code formatting rules (bonus)
     └── .eslintrc.js                   # Linting rules (bonus)
 
+## Architecture Flow (Simple Explanation)
 
+    Client → Routes → Controllers → Services → SQLite
+                    ↓
+            Zod Validation
+                    ↓
+            Middlewares (auth, rate-limit, logger)
 
 ## Key Endpoints
 **Patients**:
