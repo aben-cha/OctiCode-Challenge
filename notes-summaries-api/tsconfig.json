@@ -1,34 +1,48 @@
 {
   "compilerOptions": {
+    // JavaScript Support
     "target": "ES2022",
-    "module": "CommonJS",
-    "moduleResolution": "node",
+    "module": "ESNext",
     "lib": ["ES2022"],
-    "rootDir": "src",
-    "outDir": "dist",
+    
+    // Module Resolution
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    
+    // Output Configuration
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "sourceMap": true,
+    
+    // Type Checking
     "strict": true,
     "noImplicitAny": true,
     "strictNullChecks": true,
-    "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
-    "skipLibCheck": true,
-    "resolveJsonModule": true,
-    "allowSyntheticDefaultImports": true,
-    "sourceMap": true,
-    "inlineSources": true,
-    "incremental": true,
-    "isolatedModules": true,
-    "noEmitOnError": true,
-    "declaration": false,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
+    "noImplicitReturns": true,
+    
+    // Interop Constraints
+    "isolatedModules": true,
+    "allowImportingTsExtensions": true,
+    "forceConsistentCasingInFileNames": true,
+    
+    // Skip Checking
+    "skipLibCheck": true,
+    
+    // Development
+    "incremental": true,
+    "noEmit": true,
+    
+    // Path Mapping (optional)
     "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"]
-    },
-    "types": ["node", "vitest/globals"]
+      "@/*": ["./src/*"]
+    }
   },
-  "include": ["src/**/*", "tests/**/*"],
+  "include": ["src/**/*"],
   "exclude": ["node_modules", "dist"]
 }
