@@ -16,30 +16,41 @@
 
     notes-summaries-api/
     ├── src/
-    │   ├── server.ts                 # Entry point, starts Express server
-    │   ├── routes/                  # API routes (HTTP endpoints)
-    │   │   ├── patients.ts          # /patients endpoints
-    │   │   ├── notes.ts             # /notes endpoints
-    │   │   └── summaries.ts         # /summaries endpoints
-    │   ├── schemas/                 # Validation layer
-    │   │   └── validation.ts        # Zod schemas for request validation
-    │   ├── services/                # Business logic
-    │   │   └── database.ts          # SQLite or JSON file persistence handling
-    │   ├── middlewares/             # Middleware layer
-    │   │   ├── auth.ts              # API key validation
-    │   │   ├── errorHandler.ts      # Error handling
-    │   │   └── rateLimiter.ts       # Rate limiting per API key (bonus)
-    │   └── utils/                   # Utility functions
-    │       └── logger.ts            # Logger with request IDs (bonus)
-    ├── data/                        # Persistence layer
-    │   └── db.json or database.sqlite
-    ├── tests/                       # Test layer
-    │   └── api.test.ts              # Minimal meaningful tests
-    ├── .env                         # Environment variables (API keys, DB path)
-    ├── package.json                 # Dependencies & scripts
-    ├── tsconfig.json                # TypeScript config
-    ├── .prettierrc                  # Code formatting (bonus)
-    └── .eslintrc.js                 # Linting (bonus)
+    │   ├── server.ts                  # Application entry point (starts HTTP server)
+    │   ├── app.ts                     # Express app configuration (middlewares & routes)
+    │   ├── config/
+    │   │   └── config.ts              # Environment & app configuration
+    │   ├── controllers/               # Request/response handlers
+    │   │   ├── patients.ts            # Patients controller
+    │   │   ├── notes.ts               # Notes controller
+    │   │   └── summaries.ts           # Summaries controller
+    │   ├── routes/                    # API route definitions
+    │   │   ├── patients.ts            # /patients endpoints
+    │   │   ├── notes.ts               # /notes endpoints
+    │   │   └── summaries.ts           # /summaries endpoints
+    │   ├── schemas/                   # Validation layer
+    │   │   └── validation.ts          # Zod schemas for request validation
+    │   ├── services/                  # Business logic & data access
+    │   │   ├── database.ts            # SQLite initialization & connection
+    │   │   ├── patients.ts            # Patients service
+    │   │   ├── notes.ts               # Notes service
+    │   │   └── summaries.ts           # Summaries service
+    │   ├── middlewares/               # Cross-cutting concerns
+    │   │   ├── auth.ts                # API key authentication
+    │   │   ├── rateLimiter.ts         # Rate limiting per API key
+    │   │   └── errorHandler.ts        # Centralized error handling
+    │   └── utils/                     # Shared utilities
+    │       └── logger.ts              # Logger with request IDs
+    ├── data/
+    │   └── database.sqlite            # SQLite database file
+    ├── tests/
+    │   └── api.test.ts                # API integration tests
+    ├── .env                           # Environment variables
+    ├── package.json                   # Dependencies & scripts
+    ├── tsconfig.json                  # TypeScript configuration
+    ├── .prettierrc                    # Code formatting rules (bonus)
+    └── .eslintrc.js                   # Linting rules (bonus)
+
 
 
 ## Key Endpoints
