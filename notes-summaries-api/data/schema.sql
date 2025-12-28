@@ -1,6 +1,6 @@
 -- Patients table
 CREATE TABLE IF NOT EXISTS patients (
-  id TEXT PRIMARY KEY,
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
   first_name TEXT NOT NULL,
   last_name TEXT NOT NULL,
   date_of_birth TEXT NOT NULL,
@@ -11,9 +11,9 @@ CREATE TABLE IF NOT EXISTS patients (
 
 -- Notes table (voice note metadata)
 CREATE TABLE IF NOT EXISTS notes (
-  id TEXT PRIMARY KEY,
-  patient_id TEXT NOT NULL,
-  doctor_id TEXT NOT NULL,
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  patient_id INTEGER NOT NULL,
+  doctor_id INTEGER NOT NULL,
   recorded_at TEXT NOT NULL,
   duration INTEGER NOT NULL, -- in seconds
   transcription TEXT,
@@ -25,8 +25,8 @@ CREATE TABLE IF NOT EXISTS notes (
 
 -- Summaries table
 CREATE TABLE IF NOT EXISTS summaries (
-  id TEXT PRIMARY KEY,
-  note_id TEXT NOT NULL,
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  note_id INTEGER NOT NULL,
   content TEXT NOT NULL,
   generated_at TEXT NOT NULL DEFAULT (datetime('now')),
   version INTEGER NOT NULL DEFAULT 1,
