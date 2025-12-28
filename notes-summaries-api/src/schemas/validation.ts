@@ -25,7 +25,7 @@ export const updatePatientSchema = z
     message: 'At least one field must be provided for update',
   });
 
-export const patientID = z.object({
+export const patientIdSchema = z.object({
   id: z.string().regex(/^\d+$/, 'Invalid patient ID').transform(Number),
 });
 
@@ -92,4 +92,13 @@ export const noteSummariesQuerySchema = z.object({
 // ================================================
 
 export type CreatePatientInput = z.infer<typeof createPatientSchema>;
-export type UpdatePatientInput = z.infer<typeof updatePatientSc>;
+export type UpdatePatientInput = z.infer<typeof updatePatientSchema>;
+export type PatientIdParams = z.infer<typeof patientIdSchema>;
+
+export type CreateNoteInput = z.infer<typeof createNoteSchema>;
+export type UpdateNoteInput = z.infer<typeof updateNoteSchema>;
+export type NoteIdParams = z.infer<typeof noteIdSchema>;
+
+export type CreateSummaryInput = z.infer<typeof createSummarySchema>;
+export type UpdateSummaryInput = z.infer<typeof updateSummarySchema>;
+export type SummaryIdParams = z.infer<typeof summaryIdSchema>;
