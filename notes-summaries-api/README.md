@@ -16,7 +16,7 @@
 
     notes-summaries-api/
     ├── src/
-    │   ├── index.ts                 # Entry point, starts Express server
+    │   ├── server.ts                 # Entry point, starts Express server
     │   ├── routes/                  # API routes (HTTP endpoints)
     │   │   ├── patients.ts          # /patients endpoints
     │   │   ├── notes.ts             # /notes endpoints
