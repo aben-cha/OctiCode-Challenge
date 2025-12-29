@@ -1,7 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import * as patientService from '../services/patients';
 import { CreatePatientInput } from '@/schemas/validation';
-import { success } from 'zod';
 
 export function getPatients(req: Request, res: Response, next: NextFunction) {
   try {
