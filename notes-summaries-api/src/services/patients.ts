@@ -38,3 +38,13 @@ export const create = (data: CreatePatientInput): PatientDTO => {
 // export const update = (id: string, data: UpdatePatientInput) => {
 //   //
 // };
+
+export const remove = (id: number): boolean => {
+  const patient = db.prepare('SELECT id FROM patients WHERE id = ?').get(id) as PatientDTO | null;
+
+  if (!patient) return false;
+
+  const result = db.prepare('DELETE FROM patients WHERE id = ?').run(patient.id);
+
+  return result.changes > 0;
+};

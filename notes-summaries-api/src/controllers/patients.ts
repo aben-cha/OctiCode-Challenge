@@ -1,12 +1,13 @@
 import { NextFunction, Request, Response } from 'express';
 import * as patientService from '../services/patients';
 import { CreatePatientInput } from '@/schemas/validation';
+import { success } from 'zod';
 
 export function getPatients(req: Request, res: Response, next: NextFunction) {
   try {
     const patients = patientService.findAll();
     res.status(200).json({
-      status: true,
+      success: true,
       count: patients.length,
       data: patients,
     });
@@ -21,12 +22,12 @@ export function getPatientByID(req: Request, res: Response, next: NextFunction) 
 
     if (!patient) {
       return res.status(404).json({
-        status: false,
+        success: false,
         error: 'Patient not found',
       });
     }
     res.status(200).json({
-      status: true,
+      success: true,
       data: patient,
     });
   } catch (error) {
@@ -38,7 +39,7 @@ export function createPatient(req: Request, res: Response, next: NextFunction) {
   try {
     const patient = patientService.create(req.body as CreatePatientInput);
     res.status(201).json({
-      status: true,
+      success: true,
       data: patient,
     });
   } catch (error: any) {
@@ -57,6 +58,20 @@ export function updatePatient(req: Request, res: Response) {
   res.json({ id: req.params.id, ...req.body });
 }
 
-export function deletePatient(req: Request, res: Response) {
-  res.status(204).json({ message: 'deletePatient' });
+export function deletePatient(req: Request, res: Response, next: NextFunction) {
+  try {
+    const deletePatient = patientService.remove(Number(req.params.id));
+    if (!deletePatient) {
+      return res.status(404).json({
+        success: false,
+        error: 'Patient not found',
+      });
+    }
+    res.status(204).json({
+      success: true,
+      message: `Patient deleted successfully`,
+    });
+  } catch (error) {
+    next(error);
+  }
 }

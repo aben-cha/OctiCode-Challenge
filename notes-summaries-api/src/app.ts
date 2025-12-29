@@ -17,5 +17,4 @@ app.get('/health', (req: Request, res: Response) => {
 // Global error handler
 app.use(errorHandler);
 
-
 export default app;
