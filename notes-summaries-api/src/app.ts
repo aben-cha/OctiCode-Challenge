@@ -8,7 +8,7 @@ const app = express();
 app.use(express.json());
 
 // Routes
-app.use('/patients', patientsRouter);
+app.use('/api/patients', patientsRouter);
 
 // Health check
 app.get('/health', (req: Request, res: Response) => {
