@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import * as patientService from '../services/patients';
-import { CreatePatientInput } from '@/schemas/validation';
+import { CreatePatientInput, UpdatePatientInput } from '@/schemas/validation';
 
 export function getPatients(req: Request, res: Response, next: NextFunction) {
   try {
@@ -53,8 +53,23 @@ export function createPatient(req: Request, res: Response, next: NextFunction) {
   }
 }
 
-export function updatePatient(req: Request, res: Response) {
-  res.json({ id: req.params.id, ...req.body });
+export function updatePatient(req: Request, res: Response, next: NextFunction) {
+  try {
+    const id = Number(req.params.id);
+    const patient = patientService.update(id, req.body as UpdatePatientInput);
+    if (!patient) {
+      return res.status(404).json({
+        success: false,
+        message: 'Patient not found',
+      });
+    }
+    res.status(201).json({
+      success: true,
+      data: patient,
+    });
+  } catch (error) {
+    next(error);
+  }
 }
 
 export function deletePatient(req: Request, res: Response, next: NextFunction) {

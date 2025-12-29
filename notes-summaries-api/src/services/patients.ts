@@ -1,4 +1,4 @@
-import { CreatePatientInput } from '@/schemas/validation';
+import { CreatePatientInput, UpdatePatientInput } from '@/schemas/validation';
 import { db } from './database';
 import { Patient, PatientDTO } from '@/types/entities';
 
@@ -35,10 +35,6 @@ export const create = (data: CreatePatientInput): PatientDTO => {
   return toDTO(patient);
 };
 
-// export const update = (id: string, data: UpdatePatientInput) => {
-//   //
-// };
-
 export const remove = (id: number): boolean => {
   const patient = db.prepare('SELECT id FROM patients WHERE id = ?').get(id) as PatientDTO | null;
 
@@ -47,4 +43,49 @@ export const remove = (id: number): boolean => {
   const result = db.prepare('DELETE FROM patients WHERE id = ?').run(patient.id);
 
   return result.changes > 0;
+};
+
+export const update = (id: number, data: UpdatePatientInput): PatientDTO | null => {
+  let patient = db.prepare('SELECT * FROM patients WHERE id = ?').get(id) as Patient;
+
+  if (!patient) return null;
+
+  const fields: string[] = [];
+  const values: string[] = [];
+
+  if (data.firstName !== undefined) {
+    fields.push('first_name');
+    values.push(data.firstName);
+  }
+  if (data.lastName !== undefined) {
+    fields.push('last_name');
+    values.push(data.lastName);
+  }
+  if (data.dateOfBirth !== undefined) {
+    fields.push('date_of_birth');
+    values.push(data.dateOfBirth);
+  }
+  if (data.medicalRecordNumber !== undefined) {
+    fields.push('medical_record_number');
+    values.push(data.medicalRecordNumber);
+  }
+
+  const str = fields.map((key) => `${key} = ?`).join(', ');
+
+  // console.log(values, fields);
+  const result = db
+    .prepare(
+      `
+        UPDATE patients
+        SET ${str}, updated_at = CURRENT_TIMESTAMP
+        WHERE id = ?
+      `
+    )
+    .run(...values, id);
+
+  if (result.changes === 0) return null;
+
+  patient = db.prepare('SELECT * FROM patients WHERE id = ?').get(id) as Patient;
+
+  return toDTO(patient);
 };
