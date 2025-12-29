@@ -7,7 +7,6 @@ const router = Router();
 
 router.get('/', patientController.getPatients);
 router.get('/:id', validateParams(patientIdSchema), patientController.getPatientByID);
-router.get('/:id', validateParams(patientIdSchema), patientController.getPatientByID);
 router.post('/', validateBody(createPatientSchema), patientController.createPatient);
 router.put(
   '/:id',
