@@ -10,12 +10,12 @@ app.use(express.json());
 // Routes
 app.use('/patients', patientsRouter);
 
-// Global error handler
-app.use(errorHandler);
-
 // Health check
 app.get('/health', (req: Request, res: Response) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
+// Global error handler
+app.use(errorHandler);
+
 
 export default app;
