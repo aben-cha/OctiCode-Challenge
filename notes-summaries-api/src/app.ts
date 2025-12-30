@@ -1,4 +1,6 @@
 import express from 'express';
+import swaggerUi from 'swagger-ui-express';
+import { swaggerSpec } from './config/swagger';
 import cors from 'cors';
 import helmet from 'helmet';
 import { initDatabase } from './services/database';
@@ -30,6 +32,15 @@ app.use(express.urlencoded({ extended: true }));
 if (config.nodeEnv === 'development') {
   app.use(logger);
 }
+
+// Swagger Documentation
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
+// Swagger JSON
+app.get('/api-docs.json', (req, res) => {
+  res.setHeader('Content-Type', 'application/json');
+  res.send(swaggerSpec);
+});
 
 // Health check (no auth needed)
 app.get('/health', (req, res) => {
