@@ -1,6 +1,6 @@
-import { CreatePatientInput, UpdatePatientInput } from '@/schemas/validation';
+import { CreatePatientInput, UpdatePatientInput } from '../schemas/validation';
 import { db } from './database';
-import { Patient, PatientDTO } from '@/types/entities';
+import { Patient, PatientDTO } from '../types/entities';
 
 const toDTO = (patient: Patient): PatientDTO => ({
   id: patient.id,

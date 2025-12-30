@@ -12,7 +12,7 @@ import summaryRoutes from './routes/summaries';
 // Middlewares
 import { errorHandler } from './middlewares/errorHandler';
 import { logger } from './middlewares/logger';
-import { authenticate } from './middlewares/auth';
+// import { authenticate } from './middlewares/auth';
 import { rateLimiter } from './middlewares/rateLimiter';
 
 const app = express();
@@ -40,7 +40,7 @@ app.get('/health', (req, res) => {
   });
 });
 
-app.use('/api', authenticate);
+// app.use('/api', authenticate);
 
 // Apply rate limiting
 app.use('/api', rateLimiter(100, 60000));

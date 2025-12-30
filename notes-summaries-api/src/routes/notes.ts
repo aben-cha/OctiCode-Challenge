@@ -1,12 +1,12 @@
 import { Router } from 'express';
-import { validateParams, validateBody } from '@/middlewares/validate';
-import * as noteController from '@/controllers/notes';
+import { validateParams, validateBody } from '../middlewares/validate';
+import * as noteController from '../controllers/notes';
 import {
   createNoteSchema,
   noteIdSchema,
   patientNotesQuerySchema,
   updateNoteSchema,
-} from '@/schemas/validation';
+} from '../schemas/validation';
 
 const router = Router();
 

@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import * as noteService from '../services/notes';
 import * as patientService from '../services/patients';
-import { CreateNoteInput, UpdateNoteInput } from '@/schemas/validation';
+import { CreateNoteInput, UpdateNoteInput } from '../schemas/validation';
 
 export function getNoteById(req: Request, res: Response, next: NextFunction) {
   try {

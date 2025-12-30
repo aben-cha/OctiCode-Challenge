@@ -1,7 +1,6 @@
-// import { CreateNoteInput, UpdateNoteInput } from '@/schemas/validation';
-import { CreateNoteInput, UpdateNoteInput } from '@/schemas/validation';
+import { CreateNoteInput, UpdateNoteInput } from '../schemas/validation';
 import { db } from './database';
-import { Note, NoteDTO } from '@/types/entities';
+import { Note, NoteDTO } from '../types/entities';
 
 const toDTO = (note: Note): NoteDTO => ({
   id: note.id,

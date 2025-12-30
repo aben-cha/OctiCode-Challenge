@@ -1,7 +1,7 @@
 import { Router } from 'express';
-import { validateParams, validateBody } from '@/middlewares/validate';
+import { validateParams, validateBody } from '../middlewares/validate';
 import { createPatientSchema, updatePatientSchema, patientIdSchema } from '../schemas/validation';
-import * as patientController from '@/controllers/patients';
+import * as patientController from '../controllers/patients';
 
 const router = Router();
 
