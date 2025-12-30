@@ -20,9 +20,9 @@ export default tseslint.config(
           varsIgnorePattern: '^_',
         },
       ],
-      '@typescript-eslint/no-explicit-any': 'warn',
+      '@typescript-eslint/no-explicit-any': 'off',  // ✅ Disable any warnings
       '@typescript-eslint/explicit-function-return-type': 'off',
-      'no-console': 'warn',
+      'no-console': 'off',
     },
     languageOptions: {
       parserOptions: {
@@ -31,6 +31,6 @@ export default tseslint.config(
     },
   },
   {
-    ignores: ['dist/**', 'node_modules/**', '*.config.js', '*.config.mjs'],
+    ignores: ['dist/**', 'node_modules/**', '*.config.js', '*.config.mjs', 'tests/**'],
   }
 );

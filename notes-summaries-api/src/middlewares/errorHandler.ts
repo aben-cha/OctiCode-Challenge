@@ -1,6 +1,16 @@
 import { NextFunction, Request, Response } from 'express';
 
-export const errorHandler = (error: any, _req: Request, res: Response, _next: NextFunction) => {
+interface CustomError extends Error {
+  code?: string;
+  stack?: string;
+}
+
+export const errorHandler = (
+  error: CustomError,
+  _req: Request,
+  res: Response,
+  _next: NextFunction
+) => {
   console.error('Error: ', error);
 
   let statusCode = 500;

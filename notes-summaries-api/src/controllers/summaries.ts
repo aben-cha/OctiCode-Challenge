@@ -3,6 +3,10 @@ import * as summaryService from '../services/summaries';
 import * as noteService from '../services/notes';
 import { CreateSummaryInput, UpdateSummaryInput } from '../schemas/validation';
 
+interface SqliteError extends Error {
+  code?: string;
+}
+
 export const createSummary = (req: Request, res: Response, next: NextFunction) => {
   try {
     const { noteId } = req.params;
@@ -22,8 +26,8 @@ export const createSummary = (req: Request, res: Response, next: NextFunction) =
       success: true,
       data: summary,
     });
-  } catch (error: any) {
-    if (error.code === 'SQLITE_CONSTRAINT_FOREIGNKEY') {
+  } catch (error) {
+    if ((error as SqliteError).code === 'SQLITE_CONSTRAINT_FOREIGNKEY') {
       res.status(404).json({
         success: false,
         error: 'Invalid note ID',

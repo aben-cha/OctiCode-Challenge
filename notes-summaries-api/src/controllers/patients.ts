@@ -2,6 +2,10 @@ import { NextFunction, Request, Response } from 'express';
 import * as patientService from '../services/patients';
 import { CreatePatientInput, UpdatePatientInput } from '../schemas/validation';
 
+interface SqliteError extends Error {
+  code?: string;
+}
+
 export function getAllPatients(_req: Request, res: Response, next: NextFunction) {
   try {
     const patients = patientService.findAll();
@@ -42,8 +46,8 @@ export function createPatient(req: Request, res: Response, next: NextFunction) {
       success: true,
       data: patient,
     });
-  } catch (error: any) {
-    if (error.code === 'SQLITE_CONSTRAINT_UNIQUE') {
+  } catch (error) {
+    if ((error as SqliteError).code === 'SQLITE_CONSTRAINT_UNIQUE') {
       res.status(409).json({
         success: false,
         error: 'Medical record number already exists',

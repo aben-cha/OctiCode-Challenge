@@ -35,3 +35,6 @@ coverage/
 # Optional: npm package lock files (if you want to regenerate)
 # package-lock.json
 # yarn.lock
+
+# TypeScript build cache
+tsconfig.tsbuildinfo
