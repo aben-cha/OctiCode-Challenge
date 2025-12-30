@@ -58,7 +58,6 @@ export const patientNotesQuerySchema = z.object({
 // ============================================================================
 
 export const createSummarySchema = z.object({
-  noteId: z.coerce.number().int().positive('Note ID must be a positive integer'),
   content: z.string().min(1, 'Content is required').max(50000),
 });
 

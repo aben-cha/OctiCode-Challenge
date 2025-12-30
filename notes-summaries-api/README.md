@@ -71,15 +71,19 @@
 
 **Notes**:
 
-    POST /api/patients/:patientId/notes - Create note for patient
-    GET /api/patients/:patientId/notes - Get all notes for patient
-    GET /api/notes/:id - Get specific note
-    DELETE /api/notes/:id - Delete note
+    POST   /api/patients/:patientId/notes     - Create a note for a patient
+    GET    /api/patients/:patientId/notes     - Get all notes for a patient
+    GET    /api/notes/:id                     - Get a specific note by ID
+    PUT    /api/notes/:id                     - Update a note
+    DELETE /api/notes/:id                     - Delete a note
 
 **Summaries**:
 
-    POST /api/notes/:noteId/summaries - Generate/create summary
-    GET /api/notes/:noteId/summaries - Get summary for note
+    POST   /api/notes/:noteId/summaries       - Create/generate a summary for a note
+    GET    /api/notes/:noteId/summaries       - Get all summaries for a note
+    GET    /api/summaries/:id                 - Get a specific summary by ID
+    PUT    /api/summaries/:id                 - Update a summary
+    DELETE /api/summaries/:id                 - Delete a summary
 
 **Bonus**:
 
