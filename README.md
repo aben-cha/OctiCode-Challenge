@@ -31,3 +31,4 @@ A production-ready REST API built with:
 - ESLint + Prettier
 - Request logging with correlation IDs
 - Basic rate limiting
+- Swagger documentation 
