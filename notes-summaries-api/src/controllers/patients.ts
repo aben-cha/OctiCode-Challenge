@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import * as patientService from '../services/patients';
 import { CreatePatientInput, UpdatePatientInput } from '@/schemas/validation';
 
-export function getPatients(req: Request, res: Response, next: NextFunction) {
+export function getAllPatients(req: Request, res: Response, next: NextFunction) {
   try {
     const patients = patientService.findAll();
     res.status(200).json({
@@ -15,7 +15,7 @@ export function getPatients(req: Request, res: Response, next: NextFunction) {
   }
 }
 
-export function getPatientByID(req: Request, res: Response, next: NextFunction) {
+export function getPatientById(req: Request, res: Response, next: NextFunction) {
   try {
     const patient = patientService.findById(Number(req.params.id));
 
