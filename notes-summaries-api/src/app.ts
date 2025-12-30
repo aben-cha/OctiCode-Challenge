@@ -10,7 +10,7 @@ app.use(express.json());
 
 // Routes
 app.use('/api/patients', patientsRouter);
-app.use('/api/notes', notesRouter);
+app.use('/api', notesRouter);
 
 // Health check
 app.get('/health', (req: Request, res: Response) => {
