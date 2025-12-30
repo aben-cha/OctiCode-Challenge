@@ -3,7 +3,7 @@ import * as noteService from '../services/notes';
 import * as patientService from '../services/patients';
 import { CreateNoteInput, UpdateNoteInput } from '@/schemas/validation';
 
-export function getNoteByID(req: Request, res: Response, next: NextFunction) {
+export function getNoteById(req: Request, res: Response, next: NextFunction) {
   try {
     const note = noteService.findById(Number(req.params.id));
 
