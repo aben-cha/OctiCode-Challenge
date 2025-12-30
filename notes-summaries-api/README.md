@@ -314,3 +314,8 @@
     better-sqlite3 for SQLite integration
     Zod for runtime validation
     Swagger UI for API documentation
+
+
+## 📸 Screenshots
+
+![Swagger API Docs](swagger.png)
