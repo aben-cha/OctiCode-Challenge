@@ -138,7 +138,7 @@ const options: swaggerJsdoc.Options = {
         },
       },
     },
-    // security: [{ ApiKeyAuth: [] }],
+    security: [{ ApiKeyAuth: [] }],
   },
   apis: ['./src/routes/*.ts'], // Path to route files
 };
