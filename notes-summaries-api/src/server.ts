@@ -1,9 +1,11 @@
 import app from './app';
 import config from './config/config';
-import { initDatabase } from './services/database';
 
-initDatabase();
+const PORT = config.port;
 
-app.listen(config.port, () => {
-  console.log(`Server running on port ${config.port}`);
+app.listen(PORT, () => {
+  console.log('=================================');
+  console.log(`Server running on port ${PORT}`);
+  console.log(`Health check: http://localhost:${PORT}/health`);
+  console.log('=================================');
 });
