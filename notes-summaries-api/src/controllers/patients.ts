@@ -67,7 +67,13 @@ export function updatePatient(req: Request, res: Response, next: NextFunction) {
       success: true,
       data: patient,
     });
-  } catch (error) {
+  } catch (error: any) {
+    if (error.code === 'SQLITE_CONSTRAINT_UNIQUE') {
+      return res.status(409).json({
+        success: false,
+        error: 'Medical record number already exists',
+      });
+    }
     next(error);
   }
 }

@@ -26,7 +26,6 @@ export const patientIdSchema = z.object({
 // ============================================================================
 
 export const createNoteSchema = z.object({
-  patientId: z.coerce.number().int().positive('Patient ID must be a positive integer'),
   doctorId: z.coerce.number().int().positive('Doctor ID must be a positive integer'),
   recordedAt: z.string().datetime('Invalid datetime format'),
   duration: z.coerce.number().int().nonnegative('Duration must be non-negative'),
