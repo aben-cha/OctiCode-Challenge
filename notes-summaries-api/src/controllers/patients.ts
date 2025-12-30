@@ -55,15 +55,17 @@ export function createPatient(req: Request, res: Response, next: NextFunction) {
 
 export function updatePatient(req: Request, res: Response, next: NextFunction) {
   try {
-    const id = Number(req.params.id);
-    const patient = patientService.update(id, req.body as UpdatePatientInput);
+    const { id } = req.params;
+    const patient = patientService.update(Number(id), req.body as UpdatePatientInput);
+
     if (!patient) {
       return res.status(404).json({
         success: false,
-        message: 'Patient not found',
+        error: 'Patient not found',
       });
     }
-    res.status(201).json({
+
+    res.status(200).json({
       success: true,
       data: patient,
     });
@@ -74,6 +76,7 @@ export function updatePatient(req: Request, res: Response, next: NextFunction) {
         error: 'Medical record number already exists',
       });
     }
+
     next(error);
   }
 }

@@ -46,46 +46,38 @@ export const remove = (id: number): boolean => {
 };
 
 export const update = (id: number, data: UpdatePatientInput): PatientDTO | null => {
-  let patient = db.prepare('SELECT * FROM patients WHERE id = ?').get(id) as Patient;
-
-  if (!patient) return null;
-
   const fields: string[] = [];
-  const values: string[] = [];
+  const values: any[] = [];
 
   if (data.firstName !== undefined) {
-    fields.push('first_name');
+    fields.push('first_name = ?');
     values.push(data.firstName);
   }
   if (data.lastName !== undefined) {
-    fields.push('last_name');
+    fields.push('last_name = ?');
     values.push(data.lastName);
   }
   if (data.dateOfBirth !== undefined) {
-    fields.push('date_of_birth');
+    fields.push('date_of_birth = ?');
     values.push(data.dateOfBirth);
   }
   if (data.medicalRecordNumber !== undefined) {
-    fields.push('medical_record_number');
+    fields.push('medical_record_number = ?');
     values.push(data.medicalRecordNumber);
   }
 
-  const str = fields.map((key) => `${key} = ?`).join(', ');
+  if (fields.length === 0) {
+    return findById(id);
+  }
 
-  // console.log(values, fields);
-  const result = db
-    .prepare(
-      `
-        UPDATE patients
-        SET ${str}, updated_at = CURRENT_TIMESTAMP
-        WHERE id = ?
-      `
-    )
-    .run(...values, id);
+  fields.push("updated_at = datetime('now')");
+  values.push(id);
 
-  if (result.changes === 0) return null;
+  const result = db.prepare(`UPDATE patients SET ${fields.join(', ')} WHERE id = ?`).run(...values);
 
-  patient = db.prepare('SELECT * FROM patients WHERE id = ?').get(id) as Patient;
+  if (result.changes === 0) {
+    return null;
+  }
 
-  return toDTO(patient);
+  return findById(id);
 };
