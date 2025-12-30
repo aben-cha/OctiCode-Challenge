@@ -15,10 +15,11 @@ export const rateLimiter = (limit: number = 100, windowMs: number = 60000) => {
     const recentRequests = userRequests.filter((time) => now - time < windowMs);
 
     if (recentRequests.length >= limit) {
-      return res.status(429).json({
+      res.status(429).json({
         success: false,
         error: 'Too many requests',
       });
+      return;
     }
 
     recentRequests.push(now);

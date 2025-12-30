@@ -8,10 +8,11 @@ export function getNoteById(req: Request, res: Response, next: NextFunction) {
     const note = noteService.findById(Number(req.params.id));
 
     if (!note) {
-      return res.status(404).json({
+      res.status(404).json({
         success: false,
         error: 'Note not found',
       });
+      return;
     }
     res.status(200).json({
       success: true,
@@ -40,10 +41,11 @@ export function getNotesByPatient(req: Request, res: Response, next: NextFunctio
     const { patientId } = req.params;
     const patient = patientService.findById(Number(patientId));
     if (!patient) {
-      return res.status(404).json({
+      res.status(404).json({
         success: false,
         error: 'Patient not found',
       });
+      return;
     }
     const notes = noteService.findByPatient(Number(req.params.patientId));
     res.status(200).json({
@@ -62,10 +64,11 @@ export function updateNote(req: Request, res: Response, next: NextFunction) {
     const note = noteService.update(Number(id), req.body as UpdateNoteInput);
 
     if (!note) {
-      return res.status(404).json({
+      res.status(404).json({
         success: false,
         error: 'Note not found',
       });
+      return;
     }
 
     res.status(200).json({
@@ -81,10 +84,11 @@ export function deleteNote(req: Request, res: Response, next: NextFunction) {
   try {
     const note = noteService.remove(Number(req.params.id));
     if (!note) {
-      return res.status(404).json({
+      res.status(404).json({
         success: false,
         error: 'Note not found',
       });
+      return;
     }
     res.status(204).json({
       success: true,

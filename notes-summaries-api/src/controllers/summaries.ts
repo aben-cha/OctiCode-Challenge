@@ -7,13 +7,13 @@ export const createSummary = (req: Request, res: Response, next: NextFunction) =
   try {
     const { noteId } = req.params;
 
-    // Check if note exists
     const note = noteService.findById(Number(noteId));
     if (!note) {
-      return res.status(404).json({
+      res.status(404).json({
         success: false,
         error: 'Note not found',
       });
+      return;
     }
 
     const summary = summaryService.create(Number(noteId), req.body as CreateSummaryInput);
@@ -24,10 +24,11 @@ export const createSummary = (req: Request, res: Response, next: NextFunction) =
     });
   } catch (error: any) {
     if (error.code === 'SQLITE_CONSTRAINT_FOREIGNKEY') {
-      return res.status(404).json({
+      res.status(404).json({
         success: false,
         error: 'Invalid note ID',
       });
+      return;
     }
     next(error);
   }
@@ -37,13 +38,13 @@ export const getSummariesByNote = (req: Request, res: Response, next: NextFuncti
   try {
     const { noteId } = req.params;
 
-    // Check if note exists
     const note = noteService.findById(Number(noteId));
     if (!note) {
-      return res.status(404).json({
+      res.status(404).json({
         success: false,
         error: 'Note not found',
       });
+      return;
     }
 
     const summaries = summaryService.findByNote(Number(noteId));
@@ -64,10 +65,11 @@ export const getSummaryById = (req: Request, res: Response, next: NextFunction) 
     const summary = summaryService.findById(Number(id));
 
     if (!summary) {
-      return res.status(404).json({
+      res.status(404).json({
         success: false,
         error: 'Summary not found',
       });
+      return;
     }
 
     res.status(200).json({
@@ -85,10 +87,11 @@ export const updateSummary = (req: Request, res: Response, next: NextFunction) =
     const summary = summaryService.update(Number(id), req.body as UpdateSummaryInput);
 
     if (!summary) {
-      return res.status(404).json({
+      res.status(404).json({
         success: false,
         error: 'Summary not found',
       });
+      return;
     }
 
     res.status(200).json({
@@ -106,10 +109,11 @@ export const deleteSummary = (req: Request, res: Response, next: NextFunction) =
     const deleted = summaryService.remove(Number(id));
 
     if (!deleted) {
-      return res.status(404).json({
+      res.status(404).json({
         success: false,
         error: 'Summary not found',
       });
+      return;
     }
 
     res.status(200).json({
